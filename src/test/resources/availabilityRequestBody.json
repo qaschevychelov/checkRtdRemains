@@ -1,0 +1,11 @@
+{
+  "RequestBody": {
+    "sku": [
+      "{{skuList}}"
+    ]
+  },
+  "RequestHeader": {
+    "employeeSessionId": "{{employeeSessionId}}",
+    "requestId": "{{requestId}}"
+  }
+}

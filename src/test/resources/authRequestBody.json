@@ -1,0 +1,9 @@
+{
+  "RequestBody": {
+    "employeeNumber": "{{employeeNumber}}"
+  },
+  "RequestHeader": {
+    "appVersionId": "AND.19.49.0",
+    "requestId": "{{requestId}}"
+  }
+}
