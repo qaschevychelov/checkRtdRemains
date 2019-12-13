@@ -56,8 +56,8 @@ public class CheckRemains {
         }
     }
 
-    @Test(enabled = true, description = "Проверка остатков")
-    public void checkRemains() {
+    @Test(enabled = true, description = "Проверка остатков для товаров, где должны быть все остатки")
+    public void checkRemains_01() {
         try {
             requestId = UUID.randomUUID().toString();
             requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
@@ -110,14 +110,14 @@ public class CheckRemains {
                 // формируем мэпу ограничений
                 Map<String, String> constraints = new HashMap<>();
                 if (tz < 300) {
-                    constraints.put("ТЗ", "Остатков меньше 300. Сейчас остатков " + tz);
+                    constraints.put("ТЗ", "Остатков мало. Сейчас остатков " + tz);
                 }
                 if (os < 300) {
-                    constraints.put("ОС", "Остатков меньше 300. Сейчас остатков " + os);
+                    constraints.put("ОС", "Остатков мало. Сейчас остатков " + os);
                 }
 
                 if (uds < 300) {
-                    constraints.put("УДС", "Остатков меньше 300. Сейчас остатков " + uds);
+                    constraints.put("УДС", "Остатков мало. Сейчас остатков " + uds);
                 }
                 if (!constraints.isEmpty()) {
                     allSku.put(
@@ -134,8 +134,377 @@ public class CheckRemains {
 
             // создадим файл в таргет
             String finalJson = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/output/allRemains.json").getCanonicalPath())));
+            finalJson = finalJson.replaceAll("\"\\{\\{title}}\"", "\"Полное наполнение\"");
             finalJson = finalJson.replaceAll("\"\\{\\{body}}\"", jSon);
             File file = new File("target/allRemains.json");
+            if (file.isFile()) file.delete();
+            if (!file.isFile() && file.createNewFile()) {
+                //Сохраняем в файл
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(finalJson);
+                writer.flush();
+                writer.close();
+            }
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test(enabled = true, description = "Проверка остатков для товаров, где должна быть ТОЛЬКО витрина и много")
+    public void checkRemains_02() {
+        try {
+            requestId = UUID.randomUUID().toString();
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = requestBody
+                    .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
+                    .replaceAll("\\{\\{requestId}}", requestId);
+
+            // подготовим массив sku
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/vitrineOnly.txt").getCanonicalPath())));
+            skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
+            skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
+
+            requestBody = requestBody.replaceAll("\\{\\{skuList}}", skuList);
+
+            // делаем запрос
+            responseBody = RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(requestBody)
+                    .when()
+                    .post(host + ":" + port + availabilityEndPoint).thenReturn().getBody().asString();
+
+
+            // теперь надо пробежаться в цикле и отсеять только нужные нам товары
+            // конечный список на пополнение
+            Map<String, Map<String, String>> allSku = new HashMap<>();
+
+            JsonElement fullList = new JsonParser()
+                    .parse(responseBody)
+                    .getAsJsonObject().get("ResponseBody").getAsJsonObject().get("availabilities");
+            JsonArray fullArray = fullList.getAsJsonArray();
+
+            for (int i = 0; i < fullArray.size(); i++) {
+                int tz = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("tradezone").getAsInt();
+                int os = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("warehouse").getAsInt();
+                int uds = 0;
+                JsonArray takeaway = fullArray.get(i).getAsJsonObject()
+                        .get("warehouses").getAsJsonObject()
+                        .get("takeaway").getAsJsonArray();
+                if (takeaway.size() > 0) {
+                    int terminator = 30;
+
+                    for (int j = 0; j < terminator; j++) {
+                        if (j >= takeaway.size()) break;
+                        uds += takeaway.get(j).getAsJsonObject().get("qty").getAsInt();
+                    }
+                }
+
+                // формируем мэпу ограничений
+                Map<String, String> constraints = new HashMap<>();
+                if (tz < 300) {
+                    constraints.put("ТЗ", "Остатков мало. Сейчас остатков " + tz);
+                }
+                if (os > 0) {
+                    constraints.put("ОС", "Остатков быть не должно. Сейчас остатков " + os);
+                }
+
+                if (uds > 0) {
+                    constraints.put("УДС", "Остатков быть не должно. Сейчас остатков " + uds);
+                }
+                if (!constraints.isEmpty()) {
+                    allSku.put(
+                            fullArray.get(i).getAsJsonObject().get("material").getAsString(),
+                            constraints
+                    );
+                }
+            }
+
+            // данные подготовили. Теперь надо сформировать json для отправки
+            String jSon = allSku.toString().replaceAll("([\\d]+)=", "\"$1\":");
+            jSon = jSon.replaceAll("([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)", "\"$1\":\"$2\"");
+
+
+            // создадим файл в таргет
+            String finalJson = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/output/allRemains.json").getCanonicalPath())));
+            finalJson = finalJson.replaceAll("\"\\{\\{title}}\"", "\"ТОЛЬКО витрина много\"");
+            finalJson = finalJson.replaceAll("\"\\{\\{body}}\"", jSon);
+            File file = new File("target/onlyManyVitrineRemains.json");
+            if (file.isFile()) file.delete();
+            if (!file.isFile() && file.createNewFile()) {
+                //Сохраняем в файл
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(finalJson);
+                writer.flush();
+                writer.close();
+            }
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test(enabled = true, description = "Проверка остатков для товаров, где должна быть ТОЛЬКО витрина 1 остаток")
+    public void checkRemains_03() {
+        try {
+            requestId = UUID.randomUUID().toString();
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = requestBody
+                    .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
+                    .replaceAll("\\{\\{requestId}}", requestId);
+
+            // подготовим массив sku
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/vitrineLast.txt").getCanonicalPath())));
+            skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
+            skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
+
+            requestBody = requestBody.replaceAll("\\{\\{skuList}}", skuList);
+
+            // делаем запрос
+            responseBody = RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(requestBody)
+                    .when()
+                    .post(host + ":" + port + availabilityEndPoint).thenReturn().getBody().asString();
+
+
+            // теперь надо пробежаться в цикле и отсеять только нужные нам товары
+            // конечный список на пополнение
+            Map<String, Map<String, String>> allSku = new HashMap<>();
+
+            JsonElement fullList = new JsonParser()
+                    .parse(responseBody)
+                    .getAsJsonObject().get("ResponseBody").getAsJsonObject().get("availabilities");
+            JsonArray fullArray = fullList.getAsJsonArray();
+
+            for (int i = 0; i < fullArray.size(); i++) {
+                int tz = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("tradezone").getAsInt();
+                int os = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("warehouse").getAsInt();
+                int uds = 0;
+                JsonArray takeaway = fullArray.get(i).getAsJsonObject()
+                        .get("warehouses").getAsJsonObject()
+                        .get("takeaway").getAsJsonArray();
+                if (takeaway.size() > 0) {
+                    int terminator = 30;
+
+                    for (int j = 0; j < terminator; j++) {
+                        if (j >= takeaway.size()) break;
+                        uds += takeaway.get(j).getAsJsonObject().get("qty").getAsInt();
+                    }
+                }
+
+                // формируем мэпу ограничений
+                Map<String, String> constraints = new HashMap<>();
+                if (tz != 1) {
+                    constraints.put("ТЗ", "Товар НЕ последний, должен быть 1. Сейчас остатков " + tz);
+                }
+                if (os > 0) {
+                    constraints.put("ОС", "Остатков быть не должно. Сейчас остатков " + os);
+                }
+
+                if (uds > 0) {
+                    constraints.put("УДС", "Остатков быть не должно. Сейчас остатков " + uds);
+                }
+                if (!constraints.isEmpty()) {
+                    allSku.put(
+                            fullArray.get(i).getAsJsonObject().get("material").getAsString(),
+                            constraints
+                    );
+                }
+            }
+
+            // данные подготовили. Теперь надо сформировать json для отправки
+            String jSon = allSku.toString().replaceAll("([\\d]+)=", "\"$1\":");
+            jSon = jSon.replaceAll("([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)", "\"$1\":\"$2\"");
+
+
+            // создадим файл в таргет
+            String finalJson = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/output/allRemains.json").getCanonicalPath())));
+            finalJson = finalJson.replaceAll("\"\\{\\{title}}\"", "\"ТОЛЬКО витрина 1 остаток\"");
+            finalJson = finalJson.replaceAll("\"\\{\\{body}}\"", jSon);
+            File file = new File("target/onlyLastVitrineRemains.json");
+            if (file.isFile()) file.delete();
+            if (!file.isFile() && file.createNewFile()) {
+                //Сохраняем в файл
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(finalJson);
+                writer.flush();
+                writer.close();
+            }
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test(enabled = true, description = "Проверка остатков для товаров, где должен быть ТОЛЬКО УДС много")
+    public void checkRemains_04() {
+        try {
+            requestId = UUID.randomUUID().toString();
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = requestBody
+                    .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
+                    .replaceAll("\\{\\{requestId}}", requestId);
+
+            // подготовим массив sku
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/onlyManyUDS.txt").getCanonicalPath())));
+            skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
+            skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
+
+            requestBody = requestBody.replaceAll("\\{\\{skuList}}", skuList);
+
+            // делаем запрос
+            responseBody = RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(requestBody)
+                    .when()
+                    .post(host + ":" + port + availabilityEndPoint).thenReturn().getBody().asString();
+
+
+            // теперь надо пробежаться в цикле и отсеять только нужные нам товары
+            // конечный список на пополнение
+            Map<String, Map<String, String>> allSku = new HashMap<>();
+
+            JsonElement fullList = new JsonParser()
+                    .parse(responseBody)
+                    .getAsJsonObject().get("ResponseBody").getAsJsonObject().get("availabilities");
+            JsonArray fullArray = fullList.getAsJsonArray();
+
+            for (int i = 0; i < fullArray.size(); i++) {
+                int tz = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("tradezone").getAsInt();
+                int os = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("warehouse").getAsInt();
+                int uds = 0;
+                JsonArray takeaway = fullArray.get(i).getAsJsonObject()
+                        .get("warehouses").getAsJsonObject()
+                        .get("takeaway").getAsJsonArray();
+                if (takeaway.size() > 0) {
+                    int terminator = 30;
+
+                    for (int j = 0; j < terminator; j++) {
+                        if (j >= takeaway.size()) break;
+                        uds += takeaway.get(j).getAsJsonObject().get("qty").getAsInt();
+                    }
+                }
+
+                // формируем мэпу ограничений
+                Map<String, String> constraints = new HashMap<>();
+                if (tz > 0) {
+                    constraints.put("ТЗ", "Остатков быть не должно. Сейчас остатков " + tz);
+                }
+                if (os > 0) {
+                    constraints.put("ОС", "Остатков быть не должно. Сейчас остатков " + os);
+                }
+
+                if (uds < 300) {
+                    constraints.put("УДС", "Остатков мало. Сейчас остатков " + uds);
+                }
+                if (!constraints.isEmpty()) {
+                    allSku.put(
+                            fullArray.get(i).getAsJsonObject().get("material").getAsString(),
+                            constraints
+                    );
+                }
+            }
+
+            // данные подготовили. Теперь надо сформировать json для отправки
+            String jSon = allSku.toString().replaceAll("([\\d]+)=", "\"$1\":");
+            jSon = jSon.replaceAll("([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)", "\"$1\":\"$2\"");
+
+
+            // создадим файл в таргет
+            String finalJson = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/output/allRemains.json").getCanonicalPath())));
+            finalJson = finalJson.replaceAll("\"\\{\\{title}}\"", "\"ТОЛЬКО УДС много\"");
+            finalJson = finalJson.replaceAll("\"\\{\\{body}}\"", jSon);
+            File file = new File("target/onlyManyUDSRemains.json");
+            if (file.isFile()) file.delete();
+            if (!file.isFile() && file.createNewFile()) {
+                //Сохраняем в файл
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(finalJson);
+                writer.flush();
+                writer.close();
+            }
+        } catch (Throwable e) { e.printStackTrace(); }
+    }
+
+    @Test(enabled = true, description = "Проверка остатков для распроданных товаров")
+    public void checkRemains_05() {
+        try {
+            requestId = UUID.randomUUID().toString();
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = requestBody
+                    .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
+                    .replaceAll("\\{\\{requestId}}", requestId);
+
+            // подготовим массив sku
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/soldOut.txt").getCanonicalPath())));
+            skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
+            skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
+
+            requestBody = requestBody.replaceAll("\\{\\{skuList}}", skuList);
+
+            // делаем запрос
+            responseBody = RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(requestBody)
+                    .when()
+                    .post(host + ":" + port + availabilityEndPoint).thenReturn().getBody().asString();
+
+
+            // теперь надо пробежаться в цикле и отсеять только нужные нам товары
+            // конечный список на пополнение
+            Map<String, Map<String, String>> allSku = new HashMap<>();
+
+            JsonElement fullList = new JsonParser()
+                    .parse(responseBody)
+                    .getAsJsonObject().get("ResponseBody").getAsJsonObject().get("availabilities");
+            JsonArray fullArray = fullList.getAsJsonArray();
+
+            for (int i = 0; i < fullArray.size(); i++) {
+                int tz = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("tradezone").getAsInt();
+                int os = fullArray.get(i).getAsJsonObject()
+                        .get("shop").getAsJsonObject().get("warehouse").getAsInt();
+                int uds = 0;
+                JsonArray takeaway = fullArray.get(i).getAsJsonObject()
+                        .get("warehouses").getAsJsonObject()
+                        .get("takeaway").getAsJsonArray();
+                if (takeaway.size() > 0) {
+                    int terminator = 30;
+
+                    for (int j = 0; j < terminator; j++) {
+                        if (j >= takeaway.size()) break;
+                        uds += takeaway.get(j).getAsJsonObject().get("qty").getAsInt();
+                    }
+                }
+
+                // формируем мэпу ограничений
+                Map<String, String> constraints = new HashMap<>();
+                if (tz > 0) {
+                    constraints.put("ТЗ", "Остатков быть не должно. Сейчас остатков " + tz);
+                }
+                if (os > 0) {
+                    constraints.put("ОС", "Остатков быть не должно. Сейчас остатков " + os);
+                }
+
+                if (uds > 0) {
+                    constraints.put("УДС", "Остатков быть не должно. Сейчас остатков " + uds);
+                }
+                if (!constraints.isEmpty()) {
+                    allSku.put(
+                            fullArray.get(i).getAsJsonObject().get("material").getAsString(),
+                            constraints
+                    );
+                }
+            }
+
+            // данные подготовили. Теперь надо сформировать json для отправки
+            String jSon = allSku.toString().replaceAll("([\\d]+)=", "\"$1\":");
+            jSon = jSon.replaceAll("([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)", "\"$1\":\"$2\"");
+
+
+            // создадим файл в таргет
+            String finalJson = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/output/allRemains.json").getCanonicalPath())));
+            finalJson = finalJson.replaceAll("\"\\{\\{title}}\"", "\"РАСПРОДАНО\"");
+            finalJson = finalJson.replaceAll("\"\\{\\{body}}\"", jSon);
+            File file = new File("target/soldOutRemains.json");
             if (file.isFile()) file.delete();
             if (!file.isFile() && file.createNewFile()) {
                 //Сохраняем в файл
