@@ -2,14 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e13d88d4-451a-4dd8-a580-05e7b7eb14f4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/resources/onlyManyUDS.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/soldOut.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/vitrineLast.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/vitrineOnly.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/CheckRemains.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/CheckRemains.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/output/allRemains.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/output/allRemains.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/all.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/materials/all.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/authRequestBody.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/requestTemplates/authRequestBody.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/availabilityRequestBody.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/requestTemplates/availabilityRequestBody.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/onlyManyUDS.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/materials/onlyManyUDS.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/soldOut.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/materials/soldOut.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/vitrineLast.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/materials/vitrineLast.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/vitrineOnly.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/materials/vitrineOnly.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -24,52 +25,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/CheckRemains.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="738">
-              <caret line="281" column="29" lean-forward="true" selection-start-line="281" selection-start-column="29" selection-end-line="281" selection-end-column="29" />
+            <state relative-caret-position="2295">
+              <caret line="135" column="106" selection-start-line="135" selection-start-column="100" selection-end-line="135" selection-end-column="106" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#checkRemains#0;class#CheckRemains#0" />
-                <element signature="method#checkRemains_01#1;class#CheckRemains#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/target/onlyManyVitrineRemains.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="1" selection-end-line="9" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/target/soldOutRemains.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/target/allRemains.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2618">
-              <caret line="154" column="1" selection-start-line="154" selection-start-column="1" selection-end-line="154" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/target/onlyLastVitrineRemains.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="1" lean-forward="true" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -88,7 +51,14 @@
       <find>/api/v2/session/employee/auth</find>
       <find>50044276</find>
       <find>10018698</find>
+      <find>src.*\/(.+txt)</find>
+      <find>output</find>
     </findStrings>
+    <replaceStrings>
+      <replace>materials/$1</replace>
+      <replace>src/test/resources/materials/$1</replace>
+      <replace>src/test/resources/requestTemplates/$1</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -106,11 +76,11 @@
         <option value="$PROJECT_DIR$/src/test/resources/vitrineLast.txt" />
         <option value="$PROJECT_DIR$/src/test/resources/onlyManyUDS.txt" />
         <option value="$PROJECT_DIR$/src/test/resources/soldOut.txt" />
-        <option value="$PROJECT_DIR$/src/test/java/CheckRemains.java" />
-        <option value="$PROJECT_DIR$/target/allRemains.json" />
         <option value="$PROJECT_DIR$/target/onlyLastVitrineRemains.json" />
         <option value="$PROJECT_DIR$/target/onlyManyVitrineRemains.json" />
         <option value="$PROJECT_DIR$/target/soldOutRemains.json" />
+        <option value="$PROJECT_DIR$/target/allRemains.json" />
+        <option value="$PROJECT_DIR$/src/test/java/CheckRemains.java" />
       </list>
     </option>
   </component>
@@ -145,26 +115,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="checkRtdRemains" type="b2602c69:ProjectViewProjectNode" />
-              <item name="checkRtdRemains" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="checkRtdRemains" type="b2602c69:ProjectViewProjectNode" />
-              <item name="checkRtdRemains" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="output" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="checkRtdRemains" type="b2602c69:ProjectViewProjectNode" />
-              <item name="checkRtdRemains" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -178,6 +128,11 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\testing_projects\checkRtdRemains\src\test\resources\materials" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -247,13 +202,17 @@
       <option name="project" value="LOCAL" />
       <updated>1576160275076</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="gg">
+      <created>1576229515607</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1576229515607</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="CheckRemains - 2019.12.12 at 16h 50m 35s.xml">
-      <configuration name="CheckRemains" configurationId="TestNG" />
-    </history-entry>
     <history-entry file="CheckRemains - 2019.12.12 at 16h 54m 20s.xml">
       <configuration name="CheckRemains" configurationId="TestNG" />
     </history-entry>
@@ -281,10 +240,12 @@
     <history-entry file="CheckRemains - 2019.12.13 at 12h 24m 23s.xml">
       <configuration name="CheckRemains" configurationId="TestNG" />
     </history-entry>
+    <history-entry file="CheckRemains - 2019.12.13 at 12h 54m 33s.xml">
+      <configuration name="CheckRemains" configurationId="TestNG" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2553305" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -393,7 +354,7 @@ jSon = jSon.replaceAll(&quot;([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)&quot;, &q
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/authRequestBody.json">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/requestTemplates/authRequestBody.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="29" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="29" />
@@ -408,7 +369,7 @@ jSon = jSon.replaceAll(&quot;([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)&quot;, &q
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/resources/all.json" />
-    <entry file="file://$PROJECT_DIR$/src/test/resources/availabilityRequestBody.json">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/requestTemplates/availabilityRequestBody.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
@@ -432,35 +393,35 @@ jSon = jSon.replaceAll(&quot;([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)&quot;, &q
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/vitrineOnly.txt">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/materials/vitrineOnly.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/vitrineLast.txt">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/materials/vitrineLast.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="8" selection-start-column="8" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/onlyManyUDS.txt">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/materials/onlyManyUDS.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/soldOut.txt">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/materials/soldOut.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/all.txt">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/materials/all.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
           <caret line="138" column="8" lean-forward="true" selection-start-line="138" selection-start-column="8" selection-end-line="138" selection-end-column="8" />
@@ -476,22 +437,15 @@ jSon = jSon.replaceAll(&quot;([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)&quot;, &q
     </entry>
     <entry file="file://$PROJECT_DIR$/target/allRemains.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2618">
+        <state relative-caret-position="571">
           <caret line="154" column="1" selection-start-line="154" selection-start-column="1" selection-end-line="154" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/target/onlyLastVitrineRemains.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="1" lean-forward="true" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/soldOutRemains.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
+        <state relative-caret-position="51">
+          <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -502,22 +456,27 @@ jSon = jSon.replaceAll(&quot;([\\dа-яА-Я]+)=([а-яА-Я\\d \\.]+)&quot;, &q
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/CheckRemains.java">
+    <entry file="file://$PROJECT_DIR$/target/onlyManyVitrineRemains.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="738">
-          <caret line="281" column="29" lean-forward="true" selection-start-line="281" selection-start-column="29" selection-end-line="281" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#checkRemains#0;class#CheckRemains#0" />
-            <element signature="method#checkRemains_01#1;class#CheckRemains#0" />
-          </folding>
+        <state relative-caret-position="51">
+          <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/target/onlyManyVitrineRemains.json">
+    <entry file="file://$PROJECT_DIR$/target/soldOutRemains.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="1" selection-end-line="9" selection-end-column="1" />
+        <state relative-caret-position="51">
+          <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/CheckRemains.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2295">
+          <caret line="135" column="106" selection-start-line="135" selection-start-column="100" selection-end-line="135" selection-end-column="106" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

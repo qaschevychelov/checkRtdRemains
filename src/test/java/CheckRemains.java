@@ -40,7 +40,7 @@ public class CheckRemains {
     public void auth() {
         try {
             requestId = UUID.randomUUID().toString();
-            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/authRequestBody.json").getCanonicalPath())));
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/requestTemplates/authRequestBody.json").getCanonicalPath())));
             requestBody = requestBody
                     .replaceAll("\\{\\{employeeNumber}}", employeeNumber)
                     .replaceAll("\\{\\{requestId}}", requestId);
@@ -60,13 +60,13 @@ public class CheckRemains {
     public void checkRemains_01() {
         try {
             requestId = UUID.randomUUID().toString();
-            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/requestTemplates/availabilityRequestBody.json").getCanonicalPath())));
             requestBody = requestBody
                     .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
                     .replaceAll("\\{\\{requestId}}", requestId);
 
             // подготовим массив sku
-            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/all.txt").getCanonicalPath())));
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/materials/all.txt").getCanonicalPath())));
             skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
             skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
 
@@ -152,13 +152,13 @@ public class CheckRemains {
     public void checkRemains_02() {
         try {
             requestId = UUID.randomUUID().toString();
-            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/requestTemplates/availabilityRequestBody.json").getCanonicalPath())));
             requestBody = requestBody
                     .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
                     .replaceAll("\\{\\{requestId}}", requestId);
 
             // подготовим массив sku
-            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/vitrineOnly.txt").getCanonicalPath())));
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/materials/vitrineOnly.txt").getCanonicalPath())));
             skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
             skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
 
@@ -244,13 +244,13 @@ public class CheckRemains {
     public void checkRemains_03() {
         try {
             requestId = UUID.randomUUID().toString();
-            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/requestTemplates/availabilityRequestBody.json").getCanonicalPath())));
             requestBody = requestBody
                     .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
                     .replaceAll("\\{\\{requestId}}", requestId);
 
             // подготовим массив sku
-            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/vitrineLast.txt").getCanonicalPath())));
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/materials/vitrineLast.txt").getCanonicalPath())));
             skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
             skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
 
@@ -336,13 +336,13 @@ public class CheckRemains {
     public void checkRemains_04() {
         try {
             requestId = UUID.randomUUID().toString();
-            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/requestTemplates/availabilityRequestBody.json").getCanonicalPath())));
             requestBody = requestBody
                     .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
                     .replaceAll("\\{\\{requestId}}", requestId);
 
             // подготовим массив sku
-            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/onlyManyUDS.txt").getCanonicalPath())));
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/materials/onlyManyUDS.txt").getCanonicalPath())));
             skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
             skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
 
@@ -428,13 +428,13 @@ public class CheckRemains {
     public void checkRemains_05() {
         try {
             requestId = UUID.randomUUID().toString();
-            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/availabilityRequestBody.json").getCanonicalPath())));
+            requestBody = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/requestTemplates/availabilityRequestBody.json").getCanonicalPath())));
             requestBody = requestBody
                     .replaceAll("\\{\\{employeeSessionId}}", employeeSessionId)
                     .replaceAll("\\{\\{requestId}}", requestId);
 
             // подготовим массив sku
-            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/soldOut.txt").getCanonicalPath())));
+            String skuList = new String(Files.readAllBytes(Paths.get(new File("src/test/resources/materials/soldOut.txt").getCanonicalPath())));
             skuList = skuList.replaceAll("(\\d+)\\s?", "\"$1\",");
             skuList = skuList.replaceAll("^\\\"([\\d\\\",\\s]+)\\\",$", "$1");
 
